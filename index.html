@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAULT ZERO // Wasteland Command</title>
+<style>
+:root{
+  --bg:#090d0c;--panel:#121816;--panel2:#18201d;--line:#35413b;
+  --text:#d8dfd7;--muted:#849087;--green:#a8c58b;--green2:#6f8f5e;
+  --amber:#d7a75c;--red:#c66d62;--blue:#7295a2;
+}
+*{box-sizing:border-box}
+body{margin:0;background:
+radial-gradient(circle at 50% -10%,#26312a 0,#111714 35%,#070a09 75%);
+color:var(--text);font-family:"Courier New",ui-monospace,monospace;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;
+background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 4px);mix-blend-mode:overlay}
+.wrap{max-width:1240px;margin:auto;padding:22px}
+.top{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:14px}.badge{width:58px;height:58px;border:3px solid var(--green);
+border-radius:50%;display:grid;place-items:center;color:var(--green);font-size:26px;box-shadow:0 0 20px #a8c58b22}
+h1{margin:0;font-size:31px;letter-spacing:5px;color:#dfe8dc}h1 span{color:var(--green)}
+.subtitle{color:var(--muted);font-size:12px;margin-top:4px;letter-spacing:1px}
+button{font:inherit;font-weight:700;cursor:pointer;border:1px solid var(--green2);background:#1b271e;color:var(--green);
+padding:12px 16px;border-radius:4px;box-shadow:inset 0 0 0 1px #0a0e0c}
+button:hover{background:#263725}
+.layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(320px,1fr);gap:16px}
+.card{background:linear-gradient(180deg,#151d19,#0f1512);border:1px solid var(--line);border-radius:6px;
+box-shadow:0 14px 35px #0009;position:relative;overflow:hidden}
+.card:after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #a8c58b08}
+.cardhead{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);
+font-size:12px;letter-spacing:1.5px}.green{color:var(--green)}.muted{color:var(--muted)}
+.statusdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-right:7px}
+.vault{min-height:540px;background:
+linear-gradient(#0d1411cc,#0d1411cc),
+repeating-linear-gradient(90deg,#1c2420 0 2px,transparent 2px 92px);
+}
+.scene{position:relative;height:480px;overflow:hidden}
+.wall{position:absolute;left:4%;right:4%;top:8%;bottom:7%;border:3px solid #59645c;
+background:linear-gradient(180deg,#202924,#121916);box-shadow:inset 0 0 60px #000}
+.wall:before{content:"VAULT  ZERO";position:absolute;left:50%;top:7%;transform:translateX(-50%);
+color:#73806f;letter-spacing:7px;font-weight:bold;font-size:18px}
+.floor{position:absolute;left:7%;right:7%;bottom:6%;height:52%;display:grid;
+grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:7px;padding:7px;
+border:2px solid #667168;background:#0b100e}
+.room{position:relative;border:1px solid #47534b;background:
+linear-gradient(135deg,#202a25,#111815);display:flex;align-items:flex-end;padding:10px;
+color:#849087;font-size:10px;letter-spacing:1px}
+.room:before{content:"";position:absolute;left:12%;right:12%;top:20%;height:35%;border:1px solid #344039;opacity:.7}
+.room.active{border-color:#708762}.room.locked{opacity:.42}
+.room b{position:relative;z-index:1}.room .lamp{position:absolute;right:8px;top:8px;width:5px;height:5px;border-radius:50%;background:#6e8d59;box-shadow:0 0 7px #6e8d59}
+.console{position:absolute;left:9%;top:19%;width:21%;height:12%;border:2px solid #46534a;background:#111916}
+.console:after{content:"STATUS // 73%";position:absolute;left:10px;top:9px;color:#6f8f5e;font-size:9px}
+.door{position:absolute;right:11%;top:18%;width:15%;height:25%;border:4px solid #46524a;border-bottom:0;border-radius:50% 50% 0 0}
+.door:after{content:"LOCKED";position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);color:#7d625e;font-size:9px}
+.player{position:absolute;left:49%;bottom:19%;width:74px;height:150px;transform:translateX(-50%);
+filter:drop-shadow(0 10px 7px #000)}
+.player .head{position:absolute;left:25px;top:0;width:30px;height:34px;border-radius:48% 48% 43% 43%;background:#b47f63;border:2px solid #513b32}
+.player .hair{position:absolute;left:25px;top:-2px;width:30px;height:12px;background:#30312a;border-radius:50% 50% 20% 20%}
+.player .torso{position:absolute;left:15px;top:31px;width:44px;height:65px;border-radius:10px 10px 5px 5px;background:#4a5a4b;border:3px solid #252e28}
+.player .vest{position:absolute;left:18px;top:38px;width:38px;height:48px;border-left:7px solid #273128;border-right:7px solid #273128}
+.player .arm{position:absolute;top:38px;width:14px;height:59px;background:#a9745c;border:2px solid #4b372f;border-radius:9px}
+.player .arm.l{left:5px;transform:rotate(8deg)}.player .arm.r{right:5px;transform:rotate(-8deg)}
+.player .leg{position:absolute;top:91px;width:17px;height:58px;background:#2e3830;border:2px solid #202821;border-radius:4px}
+.player .leg.l{left:19px}.player .leg.r{right:19px}
+.player .boot{position:absolute;top:140px;width:24px;height:9px;background:#171c18;border-radius:3px}.player .boot.l{left:12px}.player .boot.r{right:12px}
+.player .pip{position:absolute;left:-9px;top:55px;width:12px;height:24px;border:2px solid #7e9870;border-radius:2px;background:#192118}
+.player .pip:after{content:"";position:absolute;left:3px;top:5px;width:3px;height:9px;background:#8ba46f}
+.scan{position:absolute;inset:0;background:linear-gradient(transparent 49%,#a8c58b14 50%,transparent 51%);
+background-size:100% 9px;pointer-events:none;animation:scan 8s linear infinite}@keyframes scan{to{background-position:0 100%}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;border-top:1px solid var(--line)}
+.stat{background:#0b100e;border:1px solid #27322c;padding:9px}.stat label{display:flex;justify-content:space-between;
+font-size:10px;color:var(--muted);margin-bottom:6px}.stat b{font-size:18px;color:#dbe4d7}.bar{height:5px;background:#202a24}.bar i{display:block;height:100%;background:var(--green2);width:50%}
+.side{min-height:540px}.market{padding:14px}.ticker{border:1px solid #2e3b33;background:#0b100e;padding:12px;margin-bottom:12px}
+.ticker strong{font-size:22px;color:var(--green)}.ticker small{color:var(--muted)}
+.feed{height:350px;overflow:auto;border-top:1px solid var(--line);margin-top:10px}.event{padding:9px 4px;border-bottom:1px solid #202a24;font-size:11px;line-height:1.4}
+.buy{color:#a8c58b}.sell{color:#c66d62}
+.footer{margin-top:16px;padding:14px;font-size:11px;line-height:1.6}.warning{color:var(--amber)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;flex-direction:column}.scene{height:430px}.wall{bottom:5%}.player{bottom:17%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <div class="badge">V</div>
+    <div><h1>VAULT <span>ZERO</span></h1><div class="subtitle">WASTELAND SURVIVAL // LIVE MARKET CONTROL SYSTEM</div></div>
+  </div>
+  <a id="trade" target="_blank" rel="noopener"><button>↗ TRADE $ZERO</button></a>
+</header>
+
+<div class="layout">
+<section class="card vault">
+  <div class="cardhead"><span><span class="statusdot"></span>VAULT COMMAND // SECTOR 01</span><span class="muted">DAY 047</span></div>
+  <div class="scene">
+    <div class="wall">
+      <div class="console"></div><div class="door"></div>
+      <div class="floor">
+        <div class="room active"><span class="lamp"></span><b>COMMAND</b></div>
+        <div class="room active"><span class="lamp"></span><b>GENERATOR</b></div>
+        <div class="room locked" id="r3"><b>LOCKED // ARMORY</b></div>
+        <div class="room active"><span class="lamp"></span><b>HYDROPONICS</b></div>
+        <div class="room active"><span class="lamp"></span><b>MED BAY</b></div>
+        <div class="room locked" id="r6"><b>LOCKED // WORKSHOP</b></div>
+      </div>
+      <div class="player" aria-label="Vault survivor">
+        <div class="hair"></div><div class="head"></div><div class="torso"></div><div class="vest"></div>
+        <div class="arm l"></div><div class="arm r"></div><div class="leg l"></div><div class="leg r"></div>
+        <div class="boot l"></div><div class="boot r"></div><div class="pip"></div>
+      </div>
+    </div>
+    <div class="scan"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><label>HEALTH <span id="health">100</span>%</label><div class="bar"><i id="healthbar"></i></div></div>
+    <div class="stat"><label>MORALE <span id="morale">50</span>%</label><div class="bar"><i id="moralebar"></i></div></div>
+    <div class="stat"><label>FOOD <span id="food">70</span>%</label><div class="bar"><i id="foodbar"></i></div></div>
+    <div class="stat"><label>POWER <span id="power">70</span>%</label><div class="bar"><i id="powerbar"></i></div></div>
+  </div>
+</section>
+
+<aside class="card side">
+  <div class="cardhead"><span>MARKET TELEMETRY</span><span id="conn" class="muted">CONNECTING…</span></div>
+  <div class="market">
+    <div class="ticker"><strong>$ZERO</strong><br><small>LIVE PUMPPORTAL ACTIVITY</small></div>
+    <div class="muted">LAST TRADE</div><div id="last" style="margin:5px 0 12px">WAITING…</div>
+    <div class="muted">CONFIRMED TRADES <b id="count">0</b> · VOLUME <b id="vol">0</b> SOL</div>
+    <div class="feed" id="feed"></div>
+  </div>
+</aside>
+</div>
+
+<div class="card footer">
+  <b class="green">VAULT PROTOCOL</b><br>
+  Market activity changes the shelter state. <span class="warning">The game never signs, executes, or requests a wallet transaction.</span>
+  Buy events deliver resources; sell events create pressure; large confirmed events can unlock rare rooms.
+</div>
+</div>
+
+<script>
+const MINT="3DfP7LueqjueeBKpzzXhvogNe3CB3JQhp4BfrHNApump";
+document.getElementById("trade").href="https://pump.fun/coin/"+MINT;
+const ids=["health","morale","food","power"];
+let s=JSON.parse(localStorage.getItem("vz")||"null")||{health:100,morale:50,food:70,power:70,count:0,vol:0,rooms:0};
+const clamp=x=>Math.max(0,Math.min(100,Math.round(x)));
+function render(){
+ ids.forEach(k=>{document.getElementById(k).textContent=s[k];document.getElementById(k+"bar").style.width=s[k]+"%"});
+ document.getElementById("count").textContent=s.count;
+ document.getElementById("vol").textContent=s.vol.toFixed(3);
+ if(s.rooms>0)document.getElementById("r3").classList.remove("locked");
+ if(s.rooms>1)document.getElementById("r6").classList.remove("locked");
+ localStorage.setItem("vz",JSON.stringify(s));
+}
+function log(t,c){const d=document.createElement("div");d.className="event "+c;d.textContent=t;document.getElementById("feed").prepend(d)}
+function apply(t){
+ let n=+t.solAmount||0;s.count++;s.vol+=n;
+ document.getElementById("last").textContent=t.txType.toUpperCase()+"  "+n.toFixed(3)+" SOL";
+ if(t.txType==="buy"){
+   s.food+=Math.min(12,n*8);s.power+=Math.min(8,n*5);s.morale+=Math.min(10,n*4);
+   log("▲ BUY  "+n.toFixed(3)+" SOL  // supplies delivered","buy");
+ }else{
+   s.food-=Math.min(15,n*9);s.power-=Math.min(10,n*6);s.morale-=Math.min(12,n*5);s.health-=Math.min(15,n*7);
+   log("▼ SELL "+n.toFixed(3)+" SOL  // vault under pressure","sell");
+ }
+ if(n>=10){s.rooms++;s.health+=8;s.morale+=12;log("◆ WHALE EVENT  // rare salvage recovered","buy")}
+ ["health","morale","food","power"].forEach(k=>s[k]=clamp(s[k]));render();
+}
+render();
+const es=new EventSource("/events");
+es.onopen=()=>document.getElementById("conn").textContent="STREAM ONLINE";
+es.onmessage=e=>{try{apply(JSON.parse(e.data))}catch{}};
+es.onerror=()=>document.getElementById("conn").textContent="RECONNECTING…";
+setInterval(async()=>{try{const j=await(await fetch("/api/health")).json();document.getElementById("conn").textContent=j.streamConnected?"STREAM ONLINE":"SERVER RECONNECTING…"}catch{document.getElementById("conn").textContent="SERVER OFFLINE"}},5000);
+</script>
+</body>
+</html>
